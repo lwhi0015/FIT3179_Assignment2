@@ -1,52 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>World Happiness Report</title>
   <script src="https://cdn.jsdelivr.net/npm/vega@5.25.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.15.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.22.2"></script>
-  <style>
-    body {
-      background-color: #fffbc8;
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      text-align: center;
-    }
+  <link href="styles/style.css" rel="stylesheet" />
 
-    h1 {
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-
-    h2 {
-      font-size: 18px;
-      margin-bottom: 20px;
-    }
-
-    .dashboard {
-      max-width: 800px;
-      margin: 0 auto;
-      text-align: left;
-    }
-
-    .vis-container {
-      margin: 20px 0;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background-color: white;
-      text-align: center; 
-    }
-
-    p {
-      font-size: 14px;
-      line-height: 1.5;
-      margin-bottom: 20px;
-    }
-
-    .vis {
-      margin-top: 20px;
-    }
-  </style>
 </head>
 <body>
   <h1>World Happiness Report 2023</h1>
@@ -75,7 +35,7 @@
     </div>
 
     <div class="vis-container">
-        <h3>A Comparision of our Happiness Scores</h3>
+        <h3>A Comparision of Happiness Scores</h3>
         <div class="vis" id="vis4"></div>
         <div class="vis" id="vis5"></div>
         <p>Click the button to switch between Top 5 and Bottom 5 Happiness Scores.</p>
