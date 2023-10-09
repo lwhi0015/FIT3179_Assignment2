@@ -79,7 +79,7 @@
         <div class="vis" id="vis4"></div>
         <div class="vis" id="vis5"></div>
         <p>Click the button to switch between Top 5 and Bottom 5 Happiness Scores.</p>
-        <button id="toggleButton">Show the Bottom 5 Hapiness Scores</button>
+        <button id="toggleButton">Show the Bottom 5 Happiness Scores</button>
         <div class="vis" id="comparisonVis"></div>
     </div>
 
@@ -371,10 +371,10 @@
 
         // Update the button text and visualization based on the toggle state
         if (isTop5) {
-          toggleButton.textContent = "Show the Bottom 5 Hapiness Scores";
+          toggleButton.textContent = "Show the Bottom 5 Happiness Scores";
           vegaEmbed("#comparisonVis", spec4, { mode: "vega-lite" }).then(console.log).catch(console.warn);
         } else {
-          toggleButton.textContent = "Show the Top 5 Hapiness Scores";
+          toggleButton.textContent = "Show the Top 5 Happiness Scores";
           vegaEmbed("#comparisonVis", spec5, { mode: "vega-lite" }).then(console.log).catch(console.warn);
         }
       });
