@@ -1,0 +1,50 @@
+body {
+    background-color: #f3c364;
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 42px;
+    color: #cb6015;
+    margin-bottom: 10px;
+    font-family: 'Tenar Black';
+  }
+
+  h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-family: 'Tenar Black';
+  }
+
+  h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-family: 'Tenar Black';
+  }
+
+  .dashboard {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .vis-container {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #EAE0BB;
+    text-align: center; 
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  .vis {
+    margin-top: 20px;
+  }
