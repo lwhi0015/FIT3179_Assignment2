@@ -1,31 +1,32 @@
 body {
-    background-color: #f3c364;
+    background-color: #efdd75;
     font-family: Arial, sans-serif;
     margin: 20px;
     text-align: center;
   }
 
   h1 {
-    font-size: 42px;
-    color: #cb6015;
+    font-size: 50px;
+    color: #dc7f05;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
     margin-bottom: 10px;
-    font-family: 'Tenar Black';
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
   h2 {
-    font-size: 24px;
+    font-size: 26px;
     margin-bottom: 20px;
-    font-family: 'Tenar Black';
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
   h3 {
-    font-size: 24px;
+    font-size: 26px;
     margin-bottom: 20px;
-    font-family: 'Tenar Black';
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
   .dashboard {
-    max-width: 800px;
+    max-width:1000px;
     margin: 0 auto;
     text-align: left;
   }
@@ -35,14 +36,16 @@ body {
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: #EAE0BB;
+    background-color: #f5f1e8;
     text-align: center; 
   }
 
   p {
-    font-size: 14px;
+    font-size: 18px;
     line-height: 1.5;
+    text-align: center;
     margin-bottom: 20px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
   }
 
   .vis {
