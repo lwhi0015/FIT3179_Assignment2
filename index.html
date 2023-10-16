@@ -6,53 +6,61 @@
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.15.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.22.2"></script>
   <link href="styles/style.css" rel="stylesheet" />
-
 </head>
 <body>
   <h1>World Happiness Report 2023</h1>
-  
 
   <div class="dashboard">
+
     <div class="vis-container">
-        <h2>What is the World Happiness Report?</h2>
-        <p>The World Happiness Report is an annual publication that ranks and analyzes the happiness levels of countries around the world. <br> It is a report produced by the United Nations Sustainable Development Solutions Network (SDSN) <br>and was first published in 2012. <br>The report uses a variety of factors and indicators to assess and measure the well-being <br>and happiness of populations in different countries.</p>
-    </div>
+        <h3>World Happiness Scores: the map</h3>
+        <div class="vis" id="vis1"></div>
+        <p>This map visualizes the happiness scores of countries around the world. <br>The color intensity represents the level of happiness, with darker colors indicating higher happiness scores.</p>
+      </div>
+
     <div class="vis-container">
-      <h3>World Happiness Map</h3>
-      <p>This map visualizes the happiness scores of countries around the world. The color intensity represents the level of happiness, with darker colors indicating higher happiness scores.</p>
-      <div class="vis" id="vis1"></div>
+      <h2>What is the World Happiness Report?</h2>
+      <p>The World Happiness Report is an annual publication that ranks <br>and analyzes the happiness levels of countries around the world.</p>
+      <p>It is a report produced by the United Nations Sustainable <br>Development Solutions Network (SDSN) and was first published in 2012.</p>
+      <p>The report uses a variety of factors and indicators to assess <br>and measure the well-being and happiness of populations in different countries.</p>
+      <p>Below, see the breakdown of the report by region</p>
+      <div class="vis" id="vis6"></div>
+      <p>Pie chart caption: This pie chart shows a breakdown of the regions included in the world happiness report data.</p>
     </div>
 
     <div class="vis-container">
       <h3>Happiness vs. GDP</h3>
-      <p>The below visuals aim to compare the relation of happiness scores to GDP.</p>
-      <p>The first visual, the scatterplot, shows the GDP per Capita (X axis), and the social support score for each country.
-        <br>You can select each region within the legend to examine how each region compares.
-      </p>
+      <p>The visuals compare the relationship between happiness scores and GDP.</p>
+      <p>The scatterplot shows GDP per Capita (X-axis) and the social support score for each country.</p>
+      <p>You can select each region within the legend to examine how each region compares.</p>
       <div class="vis" id="vis2"></div>
-      <p>The radial chart shows each country in order of GDP per capital. <br>The length of the bar indicates the overall happiness score.</p>
+      <p>Happiness vs. GDP Caption: Compare happiness scores to GDP and social support.</p>
+      <p>The radial chart shows each country in order of GDP per capita. The length of the bar indicates the overall happiness score.</p>
       <div class="vis" id="vis3"></div>
+      <p>Happiness vs. GDP Caption: Radial chart displaying GDP and happiness scores.</p>
     </div>
 
     <div class="vis-container">
-        <h3>A Comparision of Happiness Scores</h3>
-        <div class="vis" id="vis4"></div>
-        <div class="vis" id="vis5"></div>
-        <p>Click the button to switch between Top 5 and Bottom 5 Happiness Scores.</p>
-        <button id="toggleButton">Show the Bottom 5 Happiness Scores</button>
-        <div class="vis" id="comparisonVis"></div>
+      <h3>Comparison of Happiness Scores</h3>
+      <p>Comparison of Happiness Scores: Toggle between top and bottom 5 happiness scores.</p>
+      <button id="toggleButton">Show the Bottom 5 Happiness Scores</button>
+      <p></p>
+      <div class="vis" id="comparisonVis"></div>
+      
+      
     </div>
+    <p></p>
 
-  </div>
-  <p>Created By Laura White<br>Monash University</p>
+  <p>Created By Laura White, Monash University</p>
 
   <script>
 
     
     const spec1 = {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "width": 600,
-        "height": 400,
+        "width": 800,
+        "height": 500,
+        
         "projection": {"type": "equalEarth"},
         "data": {
             "url": "https://raw.githubusercontent.com/lwhi0015/FIT3179/main/ne_110m.json",
@@ -70,18 +78,24 @@
             },
             "default": "0"
             },
-            {"calculate": "datum.happiness_score", "as": "Happiness Score"}
+            {
+            "calculate": "datum.happiness_score <= 0 ? 'No data' : datum.happiness_score < 2 ? '< 2' : datum.happiness_score < 3 ? '2-3' : datum.happiness_score < 4 ? '3-4' : datum.happiness_score < 5 ? '4-5' : datum.happiness_score < 6 ? '5-6' : datum.happiness_score < 7 ? '6-7' : datum.happiness_score < 8 ? '7-8' :'8+'",
+            "as": "Happiness Score"
+            },
+            {
+            "calculate": "datum['happiness_score'] === '0' ? 'No data' :  format(datum['happiness_score'], '.2f')",
+            "as": "Happiness Score Formatted"
+            }
         ],
         "mark": {"type": "geoshape", "stroke": "#141010", "strokeWidth": 0.5},
         "encoding": {
             "color": {
             "field": "Happiness Score",
-            "type": "quantitative",
+            "type": "nominal",
             "scale": {
-                "type": "linear",
-                "domain": [1.5, 8],
+                "domain": ["No data", "< 2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8", "8+"],
                 "range": [
-                "#d8f3dc",
+                "#bebebe",
                 "#b7e4c7",
                 "#95d5b2",
                 "#74c69d",
@@ -93,74 +107,90 @@
                 ]
             },
             "title": "Happiness Score",
-            "legend": {"title": "Legend"}
+            "legend": {"title": "Happiness Score"}
             },
             "tooltip": [
             {"field": "properties.NAME", "type": "nominal", "title": "Country"},
             {
-                "field": "happiness_score",
-                "type": "quantitative",
-                "title": "Happiness Score",
-                "format": ".2f",
-                "condition": {"test": "datum.happiness_score !== -1", "value": ""}
+                "field": "Happiness Score Formatted",
+                "type": "nominal", 
+                "title": "Happiness Score"
             }
             ]
         },
         "config": {"background": "#e6f3f8", "mark": {"invalid": null}}
         };
 
-            // First Vega-Lite visualization
+
+            
     const spec2 = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        
-        "data": {
-            "url": "https://raw.githubusercontent.com/lwhi0015/FIT3179/main/WHR_2023.csv"
-        },
-        "selection": {
-            "region": {"type": "multi", "fields": ["region"], "bind": "legend"}
-        },
-        "mark": "circle",
-        "encoding": {
-            "x": {
-            "field": "gdp_per_capita",
-            "type": "quantitative",
-            "title": "GDP per Capita"
-            },
-            "y": {
-            "field": "happiness_score",
-            "type": "quantitative",
-            "title": "Happiness Score"
-            },
-            "color": {"field": "region", "type": "nominal", "title": "Region"},
-            "size": {
-            "field": "social_support",
-            "type": "quantitative",
-            "title": "Social Support"
-            },
-            "tooltip": [
-            {"field": "country", "type": "nominal", "title": "Country"},
-            {
-                "field": "happiness_score",
-                "type": "quantitative",
-                "title": "Happiness Score"
-            },
-            {
-                "field": "gdp_per_capita",
-                "type": "quantitative",
-                "title": "GDP per Capita"
-            },
-            {"field": "region", "type": "nominal", "title": "Region"}
-            ],
-            "opacity": {
-            "condition": {"selection": "region", "value": 0.8},
-            "value": 0.07
-            }
-        },
-        "config": {}
-    };
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {
+    "url": "https://raw.githubusercontent.com/lwhi0015/FIT3179/main/WHR_2023.csv"
+  },
+  "background": "#f5f1e8",
+  "selection": {
+    "region": {
+      "type": "single",
+      "fields": ["region"],
+      "init": {"region": "Western Europe"},
+      "bind": {
+        "input": "select",
+        "options": [
+          "Western Europe",
+          "Middle East and North Africa",
+          "North America and ANZ",
+          "Central and Eastern Europe",
+          "Latin America and Caribbean",
+          "Southeast Asia",
+          "East Asia",
+          "Commonwealth of Independent States",
+          "South Asia",
+          "Sub-Saharan Africa"
+        ],
+        "name": "Select Region"
+      }
+    }
+  },
+  "mark": "circle",
+  "encoding": {
+    "x": {
+      "field": "gdp_per_capita",
+      "type": "quantitative",
+      "title": "GDP per Capita"
+    },
+    "y": {
+      "field": "happiness_score",
+      "type": "quantitative",
+      "title": "Happiness Score",
+      "scale": {"domain": [2, 8]}
+    },
+    "size": {
+      "field": "social_support",
+      "type": "quantitative",
+      "title": "Social Support",
+      "scale": {"domain": [0.2, 1.2]}
+    },
+    "color": {
+      "value": "#40916c"
+    },
+    "tooltip": [
+      {"field": "country", "type": "nominal", "title": "Country"},
+      {"field": "happiness_score", "type": "quantitative", "title": "Happiness Score"},
+      {"field": "gdp_per_capita", "type": "quantitative", "title": "GDP per Capita"},
+      {"field": "region", "type": "nominal", "title": "Region"}
+    ]
+  },
+  "transform": [
+    {
+      "filter": {"selection": "region"}
+    }
+  ]
+}
     
     const spec3 = {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "background": "#f5f1e8",
         "data": {
             "url": "https://raw.githubusercontent.com/lwhi0015/FIT3179/main/WHR_2023.csv"
         },
@@ -188,7 +218,14 @@
             "scale": {
                 "type": "ordinal",
                 "domain": [0, 0.5, 1, 1.5, 2, 2.5],
-                "range": ["indigo", "dark purple", "purple", "red", "orange", "yellow"]
+                "range": [
+                "#b7e4c7",
+                "#95d5b2",
+                "#74c69d",
+                "#52b788",
+                "#40916c",
+                "#1b4332",
+            ]
             },
             "title": "GDP per Capita"
             },
@@ -210,114 +247,243 @@
         "config": {"axis": {"labelFontSize": 10}, "view": {"stroke": "transparent"}}
         };
 
-    const spec4 = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "data": {
-            "url": "https://raw.githubusercontent.com/lwhi0015/FIT3179/main/WHR_2023.csv"
-        },
-        "transform": [
-            {
-            "filter": {
-                "field": "country",
-                "oneOf": ["Finland", "Denmark", "Iceland", "Israel", "Netherlands"]
-            }
+        const spec4 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "background": "#f5f1e8",
+            "data": {
+                "url": "https://raw.githubusercontent.com/lwhi0015/FIT3179/main/WHR_2023.csv"
             },
-            {
-            "fold": [
-                "social_support",
-                "healthy_life_expectancy",
-                "freedom_to_make_life_choices",
-                "generosity",
-                "perceptions_of_corruption"
-            ],
-            "as": ["category", "score"]
-            }
-        ],
-        "layer": [
-            {
-            "mark": "bar",
-            "encoding": {
-                "y": {
-                "field": "country",
-                "type": "nominal",
-                "sort": {"field": "happiness_score", "order": "descending"}
+            "transform": [
+                {
+                "filter": {
+                    "field": "country",
+                    "oneOf": ["Finland", "Denmark", "Iceland", "Israel", "Netherlands"]
+                }
                 },
-                "x": {
+                {
+                "fold": [
+                    "social_support",
+                    "healthy_life_expectancy",
+                    "freedom_to_make_life_choices",
+                    "generosity",
+                    "perceptions_of_corruption"
+                ],
+                "as": ["category", "score"]
+                },       {
+                "calculate": "datum.category === 'social_support' ? 'Social Support' : datum.category",
+                "as": "category"
+                },
+                {
+                "calculate": "datum.category === 'healthy_life_expectancy' ? 'Healthy Life Expectancy' : datum.category",
+                "as": "category"
+                },
+                {
+                "calculate": "datum.category === 'freedom_to_make_life_choices' ? 'Freedom to Make Life Choices' : datum.category",
+                "as": "category"
+                },
+                {
+                "calculate": "datum.category === 'generosity' ? 'Generosity' : datum.category",
+                "as": "category"
+                },
+                {
+                "calculate": "datum.category === 'perceptions_of_corruption' ? 'Perceptions of Corruption' : datum.category",
+                "as": "category"
+                }
+            ],
+            "layer": [
+                {
+                "mark": "bar",
+                "encoding": {
+                    "y": {
+                    "field": "country",
+                    "type": "nominal",
+                    "sort": { "field": "happiness_score", "order": "descending" }
+                    },
+                    "x": {
                     "aggregate": "sum",
                     "field": "score",
-                    "title": "Total Score",
-                    "scale": {"domain": [0, 4]} // Set the same x-axis domain for both spec4 and spec5
-                },
-                "color": {"field": "category", "type": "nominal"},
-                "tooltip": [
-                {"field": "score", "title": "Score"},
-                {"field": "category", "title": "Category"}
-                ]
-            }
-            }
-        ],
-        "width": 400,
-        "height": {"step": 20},
-        "title": "Top 5 Happiness Scores by Country",
-        "config": {"view": {"stroke": "transparent"}, "axis": {"domain": false}}
+                    "title": "Total",
+                    "scale": { "domain": [0, 4] }
+                    },
+                    "color": {
+                    "field": "category",
+                    "type": "nominal",
+                    "scale": {
+                        "range": ["#f2ba3b", "#38786c", "#f1cfa8", "#df8817", "#b4cbb9"]
+                    }
+                    },
+                    "tooltip": [
+                    { "field": "score", "title": "Score", "format": ".2f"},
+                    { "field": "category", "title": "Category" }
+                    ]
+                }
+                }
+            ],
+            "width": 400,
+            "height": { "step": 20 },
+            "title": "Top 5 Happiness Scores by Country",
+            "config": { "view": { "stroke": "transparent" }, "axis": { "domain": false },
+            "axisX": {"titleFontSize": 14, "labelFontSize": 12}}
         };
 
-    const spec5 = {
+
+
+        const spec5 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "background": "#f5f1e8",
+            "data": {
+                "url": "https://raw.githubusercontent.com/lwhi0015/FIT3179/main/WHR_2023.csv"
+            },
+            "transform": [
+                {
+                "filter": {
+                    "field": "country",
+                    "oneOf": [
+                    "Afghanistan",
+                    "Sierra Leone",
+                    "Lebanon",
+                    "Myanmar",
+                    "Bangladesh"
+                    ]
+                }
+                },
+                {
+                "fold": [
+                    "social_support",
+                    "healthy_life_expectancy",
+                    "freedom_to_make_life_choices",
+                    "generosity",
+                    "perceptions_of_corruption"
+                ],
+                "as": ["category", "score"]
+                },       {
+                "calculate": "datum.category === 'social_support' ? 'Social Support' : datum.category",
+                "as": "category"
+                },
+                {
+                "calculate": "datum.category === 'healthy_life_expectancy' ? 'Healthy Life Expectancy' : datum.category",
+                "as": "category"
+                },
+                {
+                "calculate": "datum.category === 'freedom_to_make_life_choices' ? 'Freedom to Make Life Choices' : datum.category",
+                "as": "category"
+                },
+                {
+                "calculate": "datum.category === 'generosity' ? 'Generosity' : datum.category",
+                "as": "category"
+                },
+                {
+                "calculate": "datum.category === 'perceptions_of_corruption' ? 'Perceptions of Corruption' : datum.category",
+                "as": "category"
+                }
+            ],
+            "layer": [
+                {
+                "mark": "bar",
+                "encoding": {
+                    "y": {
+                    "field": "country",
+                    "type": "nominal",
+                    "sort": { "field": "happiness_score", "order": "descending" }
+                    },
+                    "x": {
+                    "aggregate": "sum",
+                    "field": "score",
+                    "title": "Total",
+                    "scale": { "domain": [0, 4] }
+                    },
+                    "color": {
+                    "field": "category",
+                    "type": "nominal",
+                    "scale": {
+                        "range": ["#f2ba3b", "#38786c", "#f1cfa8", "#df8817", "#b4cbb9"]
+                    }
+                    },
+                    "tooltip": [
+                    { "field": "score", "title": "Score", "format": ".2f"},
+                    { "field": "category", "title": "Category" }
+                    ]
+                }
+                }
+            ],
+            "width": 400,
+            "height": { "step": 20 },
+            "title": "Bottom 5 Happiness Scores by Country",
+            "config": { "view": { "stroke": "transparent" }, "axis": { "domain": false },
+            "axisX": {"titleFontSize": 14, "labelFontSize": 12}}
+            };
+
+    spec6 = {
         "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "background": "#f5f1e8",
         "data": {
-            "url": "https://raw.githubusercontent.com/lwhi0015/FIT3179/main/WHR_2023.csv"
+            "url": "https://raw.githubusercontent.com/lwhi0015/FIT3179/main/WHR_2023.csv",
+            "format": {
+            "type": "csv"
+            }
         },
         "transform": [
             {
-            "filter": {
-                "field": "country",
-                "oneOf": [
-                "Afghanistan",
-                "Sierra Leone",
-                "Lebanon",
-                "Myanmar",
-                "Bangladesh"
-                ]
+            "aggregate": [
+                {
+                "op": "count",
+                "as": "count"
+                }
+            ],
+            "groupby": ["region"]
+            }
+        ],
+        "mark": "arc",
+        "encoding": {
+            "theta": {
+            "field": "count",
+            "type": "quantitative",
+            "stack": true,
+            "title": "Percentage of Total Countries"
+            },
+            "color": {
+            "field": "region",
+            "type": "nominal",
+            "scale": {
+                "range": [    "#1f77b4",
+                            "#ff7f0e", 
+                            "#2ca02c", 
+                            "#d62728", 
+                            "#9467bd", 
+                            "#8c564b", 
+                            "#e377c2", 
+                            "#7f7f7f", 
+                            "#bcbd22", 
+                            "#17becf" 
+            ]
             }
             },
-            {
-            "fold": [
-                "social_support",
-                "healthy_life_expectancy",
-                "freedom_to_make_life_choices",
-                "generosity",
-                "perceptions_of_corruption"
+            "tooltip": [
+            { "field": "region", "type": "nominal", "title": "Region" },
+            { "field": "count", "type": "quantitative", "title": "Country Count" }
             ],
-            "as": ["category", "score"]
-            }
-        ],
-        "layer": [
+            "layer": [
             {
-            "mark": "bar",
-            "encoding": {
-                "y": {
-                "field": "country",
-                "type": "nominal",
-                "sort": {"field": "happiness_score", "order": "descending"}
+                "mark": {
+                "type": "text",
+                "radius": 1.25,
+                "align": "center",
+                "baseline": "middle",
+                "dx": 3,
+                "dy": -5,
+                "fontSize": 14,
+                "fontWeight": "bold"
                 },
-                "x": {
-                    "aggregate": "sum",
-                    "field": "score",
-                    "title": "Total Score",
-                    "scale": {"domain": [0, 4]} // Set the same x-axis domain for both spec4 and spec5
-                },
-                "color": {"field": "category", "type": "nominal"},
-                "tooltip": [
-                {"field": "score", "title": "Score"},
-                {"field": "category", "title": "Category"}
-                ]
+                "encoding": {
+                "text": {
+                    "field": "count",
+                    "type": "quantitative",
+                    "format": ".0%"
+                }
+                }
             }
+            ]
             }
-        ],
-        "width": 400,
-        "height": {"step": 20},
-        "title": "Bottom 5 Happiness Scores by Country",
-        "config": {"view": {"stroke": "transparent"}, "axis": {"domain": false}}
         };
     
     document.addEventListener("DOMContentLoaded", function () {
@@ -346,6 +512,7 @@
     vegaEmbed("#vis1", spec1, { mode: "vega-lite" }).then(console.log).catch(console.warn);
     vegaEmbed("#vis2", spec2, { mode: "vega-lite" }).then(console.log).catch(console.warn);
     vegaEmbed("#vis3", spec3, {mode: "vega-lite"  }).then(console.log).catch(console.warn);
+    vegaEmbed("#vis6", spec6, {mode: "vega-lite"  }).then(console.log).catch(console.warn);
   </script>
 </body>
 </html>
